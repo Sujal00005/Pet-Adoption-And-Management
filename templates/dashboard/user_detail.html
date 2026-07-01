@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Adopter: {{ user_obj.get_full_name|default:user_obj.username }} — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>Adopter: {{ user_obj.get_full_name|default:user_obj.username }}</h1>
+        <a href="{% url 'dashboard:users_list' %}" class="btn btn-secondary">← Back to Users</a>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link active">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    <div style="display: grid; grid-template-columns: 340px 1fr; gap: 2rem; align-items: start;">
+
+        <!-- User info card + account actions -->
+        <div>
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Account Information</h2>
+                <dl style="display:grid; grid-template-columns: 110px 1fr; gap:.5rem .75rem; font-size:.9rem;">
+                    <dt class="text-muted">Full Name</dt>   <dd>{{ user_obj.get_full_name|default:"—" }}</dd>
+                    <dt class="text-muted">Username</dt>    <dd>{{ user_obj.username }}</dd>
+                    <dt class="text-muted">Email</dt>       <dd><a href="mailto:{{ user_obj.email }}">{{ user_obj.email }}</a></dd>
+                    <dt class="text-muted">Phone</dt>       <dd>{{ profile.phone|default:"—" }}</dd>
+                    <dt class="text-muted">Registered</dt>  <dd>{{ profile.created_at|date:"d M Y" }}</dd>
+                    <dt class="text-muted">Status</dt>
+                    <dd>
+                        {% if user_obj.is_active %}
+                            <span class="badge badge--available">Active</span>
+                        {% else %}
+                            <span class="badge badge--rejected">Inactive</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+
+            <!-- Activate / Deactivate -->
+            <div class="info-card">
+                <h2 style="font-size:1rem; margin-bottom:.75rem;">Account Status</h2>
+                {% if user_obj.is_active %}
+                    <p class="text-muted mb-2" style="font-size:.88rem;">
+                        Deactivating this account will prevent the adopter from logging in.
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="deactivate">
+                        <button type="submit" class="btn btn-danger" style="width:100%;"
+                                onclick="return confirm('Deactivate {{ user_obj.get_full_name }}?')">
+                            Deactivate Account
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-muted mb-2" style="font-size:.88rem;">
+                        Reactivating will allow this adopter to log in again.
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reactivate">
+                        <button type="submit" class="btn btn-primary" style="width:100%;">
+                            Reactivate Account
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Applications table -->
+        <div>
+            <h2 class="mb-2">Adoption Applications ({{ applications|length }})</h2>
+            {% if applications %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'pets:detail' app.pet.pk %}">{{ app.pet.name }}</a>
+                                    <span class="text-muted" style="font-size:.82rem; display:block;">{{ app.pet.get_species_display }}</span>
+                                </td>
+                                <td style="white-space:nowrap;">{{ app.submitted_at|date:"d M Y" }}</td>
+                                <td>
+                                    <span class="badge badge--{{ app.status }}">
+                                        {{ app.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'dashboard:application_review' app.pk %}" class="btn btn-sm btn-secondary">Review</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state" style="padding: 2rem 1rem;">
+                    <p class="empty-state__title">No applications yet</p>
+                    <p class="empty-state__text">This adopter hasn't submitted any applications.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Browse Pets — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container">
+        <h1>🐾 Find Your New Best Friend</h1>
+        <p>
+            {% if total_available == 0 %}
+                No pets are currently available for adoption.
+            {% elif filters_active and not page_obj.object_list %}
+                No pets match your search criteria.
+            {% else %}
+                Browse {{ total_available }} animal{{ total_available|pluralize }} waiting for adoption.
+            {% endif %}
+        </p>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container browse-layout">
+
+        <!-- Filter sidebar -->
+        <aside class="filter-sidebar" aria-label="Pet search filters">
+            <h2 class="filter-sidebar__title">Filter Pets</h2>
+
+            <form method="get" action="{% url 'pets:browse' %}" id="pet-filter-form">
+                <div class="form-group">
+                    <label for="{{ form.q.id_for_label }}">{{ form.q.label }}</label>
+                    {{ form.q }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.species.id_for_label }}">{{ form.species.label }}</label>
+                    {{ breeds_by_species|json_script:"breeds-data" }}
+                    <select
+                        name="species"
+                        id="{{ form.species.id_for_label }}"
+                        data-breeds-source="breeds-data"
+                    >
+                        {% for value, label in form.fields.species.choices %}
+                            <option value="{{ value }}" {% if form.species.value == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_breed_select">Breed</label>
+                    <select name="breed" id="id_breed_select">
+                        <option value="">Any Breed</option>
+                        {% if form.species.value and form.breed.value %}
+                            <option value="{{ form.breed.value }}" selected>{{ form.breed.value }}</option>
+                        {% elif form.breed.value %}
+                            <option value="{{ form.breed.value }}" selected>{{ form.breed.value }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                    {{ form.gender }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.size.id_for_label }}">{{ form.size.label }}</label>
+                    {{ form.size }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
+                    {{ form.location }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.min_age_years.id_for_label }}">{{ form.min_age_years.label }}</label>
+                    {{ form.min_age_years }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.max_age_years.id_for_label }}">{{ form.max_age_years.label }}</label>
+                    {{ form.max_age_years }}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="{% url 'pets:browse' %}" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Results grid -->
+        <div class="browse-results">
+            {% if page_obj.object_list %}
+                <div class="grid" role="list">
+                    {% for pet in pets %}
+                        <article class="card" role="listitem">
+                            <a href="{% url 'pets:detail' pet.pk %}" aria-label="View profile for {{ pet.name }}">
+                                {% if pet.primary_photo %}
+                                    <img
+                                        src="{{ pet.primary_photo.image.url }}"
+                                        alt="Photo of {{ pet.name }}, a {{ pet.get_species_display }}"
+                                        class="card__image"
+                                        loading="lazy"
+                                    >
+                                {% else %}
+                                    {% load static %}
+                                    {% if pet.species == 'dog' %}
+                                        <img src="{% static 'images/placeholder-dog.svg' %}" alt="Dog illustration placeholder" class="card__image">
+                                    {% elif pet.species == 'cat' %}
+                                        <img src="{% static 'images/placeholder-cat.svg' %}" alt="Cat illustration placeholder" class="card__image">
+                                    {% elif pet.species == 'rabbit' %}
+                                        <img src="{% static 'images/placeholder-rabbit.svg' %}" alt="Rabbit illustration placeholder" class="card__image">
+                                    {% elif pet.species == 'bird' %}
+                                        <img src="{% static 'images/placeholder-bird.svg' %}" alt="Bird illustration placeholder" class="card__image">
+                                    {% else %}
+                                        <img src="{% static 'images/placeholder-other.svg' %}" alt="Pet illustration placeholder" class="card__image">
+                                    {% endif %}
+                                {% endif %}
+                            </a>
+                            <div class="card__body">
+                                <h2 class="card__title">
+                                    <a href="{% url 'pets:detail' pet.pk %}">{{ pet.name }}</a>
+                                </h2>
+                                <div class="card__meta">
+                                    <span>{{ pet.get_species_display }}</span>
+                                    {% if pet.breed %}<span>{{ pet.breed }}</span>{% endif %}
+                                    <span>{{ pet.age_display }}</span>
+                                    <span>{{ pet.location }}</span>
+                                </div>
+                            </div>
+                            <div class="card__footer">
+                                <span class="badge badge--available">✅ Available</span>
+                                <a href="{% url 'pets:detail' pet.pk %}" class="btn btn-sm btn-primary">
+                                    View Profile
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                {% if page_obj.has_other_pages %}
+                    <nav class="pagination" aria-label="Pet listing pagination">
+                        {% if page_obj.has_previous %}
+                            <a
+                                class="pagination__link"
+                                href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                                aria-label="Previous page"
+                            >
+                                &laquo; Prev
+                            </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="pagination__current" aria-current="page">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a
+                                    class="pagination__link"
+                                    href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}"
+                                    aria-label="Page {{ num }}"
+                                >
+                                    {{ num }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a
+                                class="pagination__link"
+                                href="?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}"
+                                aria-label="Next page"
+                            >
+                                Next &raquo;
+                            </a>
+                        {% endif %}
+                    </nav>
+                {% endif %}
+
+            {% elif total_available == 0 %}
+                <div class="empty-state">
+                    <span class="empty-state__icon" aria-hidden="true">🏠</span>
+                    <h2 class="empty-state__title">No Pets Available Right Now</h2>
+                    <p class="empty-state__text">
+                        Check back soon — new animals arrive regularly.
+                        You can also submit a surrender request if you need help rehoming a pet.
+                    </p>
+                    <a href="/surrender/" class="btn btn-secondary">Surrender a Pet</a>
+                </div>
+
+            {% else %}
+                <div class="empty-state">
+                    <span class="empty-state__icon" aria-hidden="true">🔍</span>
+                    <h2 class="empty-state__title">No Results Found</h2>
+                    <p class="empty-state__text">
+                        No pets match your current filters. Try broadening your search or clearing all filters.
+                    </p>
+                    <a href="{% url 'pets:browse' %}" class="btn btn-primary">Clear All Filters</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/pets.js' %}"></script>
+{% endblock %}

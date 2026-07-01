@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Application for {{ application.pet.name }} — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container">
+        <h1>Application Details</h1>
+        <p class="text-muted">
+            Application for <strong>{{ application.pet.name }}</strong>
+            &mdash; submitted {{ application.submitted_at|date:"F j, Y" }}
+        </p>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container" style="max-width: 800px;">
+
+        <p class="mb-3">
+            <a href="{% url 'adoptions:my_applications' %}">&larr; Back to My Applications</a>
+        </p>
+
+        <div class="info-card mb-4">
+            <div class="flex-between flex-wrap gap-2">
+                <div>
+                    <p class="text-muted mb-1" style="font-size: 0.85rem;">Current Status</p>
+                    <span class="badge badge--{{ application.status }}">
+                        {{ application.get_status_display }}
+                    </span>
+                </div>
+                <a href="{% url 'pets:detail' application.pet.pk %}" class="btn btn-sm btn-secondary">
+                    View {{ application.pet.name }}'s Profile
+                </a>
+            </div>
+
+            {% if application.admin_remarks %}
+                <div class="mt-3">
+                    <p class="text-muted mb-1" style="font-size: 0.85rem;">Remarks from Shelter Staff</p>
+                    <p class="mb-0">{{ application.admin_remarks }}</p>
+                </div>
+            {% endif %}
+
+            {% if application.reviewed_at %}
+                <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
+                    Last reviewed {{ application.reviewed_at|date:"F j, Y" }}
+                </p>
+            {% endif %}
+        </div>
+
+        <section class="pet-info__section">
+            <h2 class="pet-info__section-title">Contact Information</h2>
+            <dl class="pet-attrs">
+                <div>
+                    <dt class="pet-attr__label">Full Name</dt>
+                    <dd class="pet-attr__value">{{ application.full_name }}</dd>
+                </div>
+                <div>
+                    <dt class="pet-attr__label">Phone</dt>
+                    <dd class="pet-attr__value">{{ application.phone }}</dd>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <dt class="pet-attr__label">Address</dt>
+                    <dd class="pet-attr__value">{{ application.address }}</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="pet-info__section">
+            <h2 class="pet-info__section-title">Housing</h2>
+            <dl class="pet-attrs">
+                <div>
+                    <dt class="pet-attr__label">Housing Type</dt>
+                    <dd class="pet-attr__value">{{ application.get_housing_type_display }}</dd>
+                </div>
+                <div>
+                    <dt class="pet-attr__label">Owns or Rents</dt>
+                    <dd class="pet-attr__value">{{ application.get_owns_or_rents_display }}</dd>
+                </div>
+                {% if application.landlord_contact %}
+                    <div style="grid-column: 1 / -1;">
+                        <dt class="pet-attr__label">Landlord Contact</dt>
+                        <dd class="pet-attr__value">{{ application.landlord_contact }}</dd>
+                    </div>
+                {% endif %}
+            </dl>
+        </section>
+
+        <section class="pet-info__section">
+            <h2 class="pet-info__section-title">Household</h2>
+            <dl class="pet-attrs">
+                <div>
+                    <dt class="pet-attr__label">Household Members</dt>
+                    <dd class="pet-attr__value">{{ application.household_members }}</dd>
+                </div>
+                <div>
+                    <dt class="pet-attr__label">Other Pets at Home</dt>
+                    <dd class="pet-attr__value">
+                        {% if application.has_other_pets %}Yes{% else %}No{% endif %}
+                    </dd>
+                </div>
+                {% if application.other_pets_desc %}
+                    <div style="grid-column: 1 / -1;">
+                        <dt class="pet-attr__label">Other Pets Description</dt>
+                        <dd class="pet-attr__value">{{ application.other_pets_desc }}</dd>
+                    </div>
+                {% endif %}
+            </dl>
+            {% if application.prev_pet_experience %}
+                <p class="mt-2"><strong>Previous pet experience:</strong> {{ application.prev_pet_experience }}</p>
+            {% endif %}
+        </section>
+
+        <section class="pet-info__section">
+            <h2 class="pet-info__section-title">Reason for Adoption</h2>
+            <p>{{ application.reason_for_adoption }}</p>
+            <p class="text-muted mt-2 mb-0" style="font-size: 0.9rem;">
+                Home visit agreed: {% if application.agrees_to_home_visit %}Yes{% else %}No{% endif %}
+            </p>
+        </section>
+
+    </div>
+</section>
+{% endblock %}

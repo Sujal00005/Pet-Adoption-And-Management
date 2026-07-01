@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Review Application — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>Review Application</h1>
+        <a href="{% url 'dashboard:applications_list' %}" class="btn btn-secondary">← Back to Applications</a>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link active">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    <!-- Error banner -->
+    {% if error %}
+    <div class="alert alert--error mb-3">
+        {{ error }}
+        <button class="alert__close" onclick="this.parentElement.remove()" aria-label="Dismiss">&times;</button>
+    </div>
+    {% endif %}
+
+    <!-- Status badge -->
+    <p class="mb-3">
+        Current status:
+        <span class="badge badge--{{ application.status }}" style="font-size:.9rem;">
+            {{ application.get_status_display }}
+        </span>
+    </p>
+
+    <!-- Two-column layout -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+        <!-- Left: Applicant and application details -->
+        <div>
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Applicant Details</h2>
+                <dl style="display:grid; grid-template-columns: 130px 1fr; gap:.4rem .75rem; font-size:.9rem;">
+                    <dt class="text-muted">Full Name</dt>   <dd>{{ application.full_name }}</dd>
+                    <dt class="text-muted">Email</dt>       <dd><a href="mailto:{{ application.applicant.email }}">{{ application.applicant.email }}</a></dd>
+                    <dt class="text-muted">Phone</dt>       <dd>{{ application.phone }}</dd>
+                    <dt class="text-muted">Address</dt>     <dd style="white-space:pre-line;">{{ application.address }}</dd>
+                    <dt class="text-muted">Submitted</dt>   <dd>{{ application.submitted_at|date:"d M Y, H:i" }}</dd>
+                </dl>
+            </div>
+
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Living Situation</h2>
+                <dl style="display:grid; grid-template-columns: 160px 1fr; gap:.4rem .75rem; font-size:.9rem;">
+                    <dt class="text-muted">Housing Type</dt>       <dd>{{ application.get_housing_type_display }}</dd>
+                    <dt class="text-muted">Owns / Rents</dt>       <dd>{{ application.get_owns_or_rents_display }}</dd>
+                    {% if application.landlord_contact %}
+                    <dt class="text-muted">Landlord Contact</dt>   <dd>{{ application.landlord_contact }}</dd>
+                    {% endif %}
+                    <dt class="text-muted">Household Members</dt>  <dd>{{ application.household_members }}</dd>
+                    <dt class="text-muted">Other Pets</dt>         <dd>{% if application.has_other_pets %}Yes — {{ application.other_pets_desc }}{% else %}No{% endif %}</dd>
+                </dl>
+            </div>
+
+            <div class="info-card">
+                <h2 style="font-size:1rem; margin-bottom:.75rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Adoption Intent</h2>
+                <p class="text-muted" style="font-size:.8rem; margin-bottom:.25rem;">Reason for adoption:</p>
+                <p style="font-size:.9rem; margin-bottom:1rem;">{{ application.reason_for_adoption }}</p>
+                {% if application.prev_pet_experience %}
+                <p class="text-muted" style="font-size:.8rem; margin-bottom:.25rem;">Previous pet experience:</p>
+                <p style="font-size:.9rem; margin-bottom:1rem;">{{ application.prev_pet_experience }}</p>
+                {% endif %}
+                <p style="font-size:.9rem;">
+                    Home visit:
+                    {% if application.agrees_to_home_visit %}
+                        <span class="text-success">Agreed</span>
+                    {% else %}
+                        <span class="text-muted">Not agreed</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Right: Pet summary + action buttons -->
+        <div>
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Pet Being Applied For</h2>
+                {% with pet=application.pet %}
+                    {% with photo=pet.primary_photo %}
+                    {% if photo %}
+                        <img src="{{ photo.image.url }}" alt="{{ pet.name }}"
+                             style="width:100%; height:180px; object-fit:cover; border-radius:6px; margin-bottom:1rem;">
+                    {% endif %}
+                    {% endwith %}
+                    <dl style="display:grid; grid-template-columns: 110px 1fr; gap:.4rem .75rem; font-size:.9rem;">
+                        <dt class="text-muted">Name</dt>     <dd><a href="{% url 'pets:detail' pet.pk %}">{{ pet.name }}</a></dd>
+                        <dt class="text-muted">Species</dt>  <dd>{{ pet.get_species_display }}</dd>
+                        <dt class="text-muted">Breed</dt>    <dd>{{ pet.breed|default:"—" }}</dd>
+                        <dt class="text-muted">Age</dt>      <dd>{{ pet.age_display }}</dd>
+                        <dt class="text-muted">Status</dt>   <dd><span class="badge badge--{{ pet.status }}">{{ pet.get_status_display }}</span></dd>
+                    </dl>
+                {% endwith %}
+            </div>
+
+            <!-- Action forms -->
+            {% if application.status != 'approved' and application.status != 'rejected' %}
+            <div class="info-card">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Actions</h2>
+
+                {% if application.status == 'pending' %}
+                <form method="post" class="mb-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="under_review">
+                    <button type="submit" class="btn btn-warning" style="width:100%;">
+                        Mark as Under Review
+                    </button>
+                </form>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_admin_remarks">Remarks (required for rejection)</label>
+                        <textarea id="id_admin_remarks" name="admin_remarks" rows="4"
+                                  placeholder="Enter feedback or notes for the applicant…">{{ application.admin_remarks }}</textarea>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" name="action" value="approve" class="btn btn-primary">
+                            ✓ Approve
+                        </button>
+                        <button type="submit" name="action" value="reject" class="btn btn-danger">
+                            ✗ Reject
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <div class="info-card">
+                <h2 style="font-size:1rem; margin-bottom:.75rem;">Decision recorded</h2>
+                <p style="font-size:.9rem;">
+                    This application was <span class="badge badge--{{ application.status }}">{{ application.get_status_display }}</span>
+                    on {{ application.reviewed_at|date:"d M Y" }}.
+                </p>
+                {% if application.admin_remarks %}
+                <p class="text-muted mt-2" style="font-size:.85rem;">Remarks: {{ application.admin_remarks }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

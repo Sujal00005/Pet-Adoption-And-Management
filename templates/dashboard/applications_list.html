@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Adoption Applications — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>
+            Adoption Applications
+            {% if pending_count %}
+                <span class="badge badge--pending" style="font-size:.9rem; vertical-align: middle;">
+                    {{ pending_count }} pending
+                </span>
+            {% endif %}
+        </h1>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link active">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    <!-- Filter bar -->
+    <form method="get" class="mb-3" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem 1.25rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 1rem; align-items: end;">
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="id_status">Status</label>
+                <select name="status" id="id_status">
+                    <option value="">All Statuses</option>
+                    {% for val, label in status_choices %}
+                        <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="id_pet_name">Pet Name</label>
+                <input type="text" name="pet_name" id="id_pet_name"
+                       value="{{ pet_filter }}" placeholder="Search by pet name…">
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="id_date_from">From Date</label>
+                <input type="date" name="date_from" id="id_date_from" value="{{ date_from }}">
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="id_date_to">To Date</label>
+                <input type="date" name="date_to" id="id_date_to" value="{{ date_to }}">
+            </div>
+
+            <div style="margin-bottom:0;">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+
+        </div>
+
+        {% if status_filter or pet_filter or date_from or date_to %}
+        <div class="mt-2">
+            <a href="{% url 'dashboard:applications_list' %}" class="text-muted" style="font-size:.85rem;">
+                ✕ Clear filters
+            </a>
+        </div>
+        {% endif %}
+    </form>
+
+    <!-- Applications table -->
+    {% if applications %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pet</th>
+                        <th>Applicant</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'pets:detail' app.pet.pk %}">{{ app.pet.name }}</a>
+                        </td>
+                        <td>
+                            {{ app.full_name }}<br>
+                            <span class="text-muted" style="font-size:.82rem;">{{ app.applicant.email }}</span>
+                        </td>
+                        <td style="white-space:nowrap;">
+                            {{ app.submitted_at|date:"d M Y" }}<br>
+                            <span class="text-muted" style="font-size:.82rem;">{{ app.submitted_at|time:"H:i" }}</span>
+                        </td>
+                        <td>
+                            <span class="badge badge--{{ app.status }}">
+                                {{ app.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:application_review' app.pk %}" class="btn btn-sm btn-secondary">Review</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <span class="empty-state__icon">📋</span>
+            <p class="empty-state__title">No applications found</p>
+            <p class="empty-state__text">
+                {% if status_filter or pet_filter or date_from or date_to %}
+                    Try adjusting your filters.
+                {% else %}
+                    No adoption applications have been submitted yet.
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

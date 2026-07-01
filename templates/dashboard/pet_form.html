@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Pet — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>{{ action }} Pet</h1>
+        <a href="{% url 'dashboard:pets_list' %}" class="btn btn-secondary">← Back to Pets</a>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link active">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+            <!-- Left column: basic details -->
+            <div>
+                <h2 class="mb-2" style="font-size:1.1rem; color: var(--color-text-muted); text-transform:uppercase; letter-spacing:.04em;">Basic Information</h2>
+
+                <div class="form-group">
+                    <label for="{{ pet_form.name.id_for_label }}">Name *</label>
+                    {{ pet_form.name }}
+                    {% if pet_form.name.errors %}
+                        {% for err in pet_form.name.errors %}<span class="error-msg">{{ err }}</span>{% endfor %}
+                    {% endif %}
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label for="{{ pet_form.species.id_for_label }}">Species *</label>
+                        {{ pet_form.species }}
+                        {% if pet_form.species.errors %}
+                            {% for err in pet_form.species.errors %}<span class="error-msg">{{ err }}</span>{% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ pet_form.breed.id_for_label }}">Breed</label>
+                        {{ pet_form.breed }}
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label for="{{ pet_form.age_years.id_for_label }}">Age (years)</label>
+                        {{ pet_form.age_years }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ pet_form.age_months.id_for_label }}">Age (months)</label>
+                        {{ pet_form.age_months }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ pet_form.gender.id_for_label }}">Gender *</label>
+                        {{ pet_form.gender }}
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label for="{{ pet_form.size.id_for_label }}">Size *</label>
+                        {{ pet_form.size }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ pet_form.color_markings.id_for_label }}">Colour / Markings</label>
+                        {{ pet_form.color_markings }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ pet_form.location.id_for_label }}">Location *</label>
+                    {{ pet_form.location }}
+                    {% if pet_form.location.errors %}
+                        {% for err in pet_form.location.errors %}<span class="error-msg">{{ err }}</span>{% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ pet_form.status.id_for_label }}">Status *</label>
+                    {{ pet_form.status }}
+                </div>
+            </div>
+
+            <!-- Right column: description, health, traits -->
+            <div>
+                <h2 class="mb-2" style="font-size:1.1rem; color: var(--color-text-muted); text-transform:uppercase; letter-spacing:.04em;">About This Pet</h2>
+
+                <div class="form-group">
+                    <label for="{{ pet_form.description.id_for_label }}">Description *</label>
+                    {{ pet_form.description }}
+                    {% if pet_form.description.errors %}
+                        {% for err in pet_form.description.errors %}<span class="error-msg">{{ err }}</span>{% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ pet_form.temperament.id_for_label }}">Temperament</label>
+                    {{ pet_form.temperament }}
+                </div>
+
+                <h2 class="mb-2 mt-3" style="font-size:1.1rem; color: var(--color-text-muted); text-transform:uppercase; letter-spacing:.04em;">Traits</h2>
+
+                <div class="form-check">
+                    {{ pet_form.good_with_kids }}
+                    <label for="{{ pet_form.good_with_kids.id_for_label }}">Good with kids</label>
+                </div>
+                <div class="form-check">
+                    {{ pet_form.good_with_pets }}
+                    <label for="{{ pet_form.good_with_pets.id_for_label }}">Good with other pets</label>
+                </div>
+                <div class="form-check mt-1">
+                    {{ pet_form.is_vaccinated }}
+                    <label for="{{ pet_form.is_vaccinated.id_for_label }}">Vaccinated</label>
+                </div>
+                <div class="form-check">
+                    {{ pet_form.is_neutered }}
+                    <label for="{{ pet_form.is_neutered.id_for_label }}">Neutered / Spayed</label>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="{{ pet_form.medical_notes.id_for_label }}">Medical Notes</label>
+                    {{ pet_form.medical_notes }}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Photo upload section -->
+        <hr style="margin: 1.5rem 0; border-color: var(--color-border);">
+        <h2 class="mb-2" style="font-size:1.1rem; color: var(--color-text-muted); text-transform:uppercase; letter-spacing:.04em;">Photo</h2>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:1rem; align-items:start;">
+            <div class="form-group">
+                <label for="{{ photo_form.image.id_for_label }}">Upload Photo</label>
+                {{ photo_form.image }}
+                {% if photo_form.image.errors %}
+                    {% for err in photo_form.image.errors %}<span class="error-msg">{{ err }}</span>{% endfor %}
+                {% endif %}
+                <span class="help-text">JPEG, PNG or WebP — max 5 MB</span>
+            </div>
+            <div class="form-group">
+                <label for="{{ photo_form.caption.id_for_label }}">Caption</label>
+                {{ photo_form.caption }}
+            </div>
+            <div class="form-check" style="padding-top:1.5rem;">
+                {{ photo_form.is_primary }}
+                <label for="{{ photo_form.is_primary.id_for_label }}">Set as primary photo</label>
+            </div>
+        </div>
+
+        {% if pet %}
+            <!-- Show existing photos when editing -->
+            {% with photos=pet.photos.all %}
+            {% if photos %}
+            <div class="mt-2">
+                <p style="font-size:.85rem; color: var(--color-text-muted); margin-bottom:.5rem;">Existing photos:</p>
+                <div class="flex gap-1 flex-wrap">
+                    {% for photo in photos %}
+                    <div style="text-align:center;">
+                        <img src="{{ photo.image.url }}"
+                             alt="{{ photo.caption|default:pet.name }}"
+                             style="width:80px; height:60px; object-fit:cover; border-radius:4px; border: 2px solid {% if photo.is_primary %}var(--color-primary){% else %}var(--color-border){% endif %};">
+                        {% if photo.is_primary %}
+                            <span style="display:block; font-size:.7rem; color: var(--color-primary);">Primary</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
+        {% endif %}
+
+        <!-- Form actions -->
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn btn-primary">
+                {% if action == 'Add' %}Add Pet{% else %}Save Changes{% endif %}
+            </button>
+            <a href="{% url 'dashboard:pets_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

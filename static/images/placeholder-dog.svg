@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#e8f5ee"/>
+
+  <!-- Soft gradient backdrop circle -->
+  <circle cx="200" cy="160" r="120" fill="#c8e8d4" opacity="0.5"/>
+
+  <!-- Body -->
+  <ellipse cx="200" cy="195" rx="72" ry="55" fill="#c8894a"/>
+
+  <!-- Head -->
+  <circle cx="200" cy="125" r="50" fill="#d9975a"/>
+
+  <!-- Left ear (floppy) -->
+  <ellipse cx="162" cy="105" rx="18" ry="30" fill="#b07040" transform="rotate(-20 162 105)"/>
+
+  <!-- Right ear (floppy) -->
+  <ellipse cx="238" cy="105" rx="18" ry="30" fill="#b07040" transform="rotate(20 238 105)"/>
+
+  <!-- Snout -->
+  <ellipse cx="200" cy="145" rx="22" ry="16" fill="#e8b07a"/>
+
+  <!-- Nose -->
+  <ellipse cx="200" cy="136" rx="8" ry="6" fill="#3d2010"/>
+
+  <!-- Left eye -->
+  <circle cx="183" cy="118" r="8" fill="#fff"/>
+  <circle cx="183" cy="118" r="5" fill="#3d2010"/>
+  <circle cx="185" cy="116" r="1.5" fill="#fff"/>
+
+  <!-- Right eye -->
+  <circle cx="217" cy="118" r="8" fill="#fff"/>
+  <circle cx="217" cy="118" r="5" fill="#3d2010"/>
+  <circle cx="219" cy="116" r="1.5" fill="#fff"/>
+
+  <!-- Mouth -->
+  <path d="M190 150 Q200 158 210 150" stroke="#3d2010" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Front left leg -->
+  <rect x="155" y="225" width="22" height="45" rx="11" fill="#c8894a"/>
+  <!-- Front right leg -->
+  <rect x="223" y="225" width="22" height="45" rx="11" fill="#c8894a"/>
+
+  <!-- Tail (curved) -->
+  <path d="M268 185 Q310 155 300 120" stroke="#b07040" stroke-width="14" fill="none" stroke-linecap="round"/>
+
+  <!-- Belly highlight -->
+  <ellipse cx="200" cy="210" rx="35" ry="22" fill="#e8b07a" opacity="0.5"/>
+
+  <!-- Paw prints (decorative, bottom) -->
+  <circle cx="80" cy="270" r="6" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="100" cy="260" r="5" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="300" cy="270" r="6" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="320" cy="260" r="5" fill="#2c7a4b" opacity="0.2"/>
+
+  <!-- Label -->
+  <text x="200" y="292" text-anchor="middle" font-family="Nunito, sans-serif" font-size="13" font-weight="700" fill="#2c7a4b" opacity="0.7">No photo yet</text>
+</svg>

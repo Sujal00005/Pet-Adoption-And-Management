@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Overview — Paws & Hearts{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <!-- Page header -->
+    <div class="flex-between mb-3">
+        <h1>Dashboard Overview</h1>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link active">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    <!-- Stats grid -->
+    <div class="dashboard-stats mb-4">
+
+        <a href="{% url 'dashboard:pets_list' %}" class="info-card" style="text-decoration:none;">
+            <div class="info-card__number">{{ stats.total_pets }}</div>
+            <div class="info-card__label">Total Pets</div>
+        </a>
+
+        <a href="{% url 'dashboard:pets_list' %}" class="info-card" style="text-decoration:none; border-left-color: var(--color-success);">
+            <div class="info-card__number" style="color: var(--color-success);">{{ stats.available_pets }}</div>
+            <div class="info-card__label">Available Pets</div>
+        </a>
+
+        <a href="{% url 'dashboard:applications_list' %}?status=pending" class="info-card" style="text-decoration:none; border-left-color: var(--color-accent);">
+            <div class="info-card__number" style="color: var(--color-accent);">{{ stats.pending_apps }}</div>
+            <div class="info-card__label">Pending Applications</div>
+        </a>
+
+        <a href="{% url 'dashboard:users_list' %}" class="info-card" style="text-decoration:none; border-left-color: var(--color-info);">
+            <div class="info-card__number" style="color: var(--color-info);">{{ stats.total_adopters }}</div>
+            <div class="info-card__label">Registered Adopters</div>
+        </a>
+
+        <a href="{% url 'dashboard:surrenders_list' %}" class="info-card" style="text-decoration:none; border-left-color: var(--color-error);">
+            <div class="info-card__number" style="color: var(--color-error);">{{ stats.new_surrenders }}</div>
+            <div class="info-card__label">New Surrenders</div>
+        </a>
+
+    </div>
+
+    <!-- Recent activity: two-column layout -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+        <!-- Recent Applications -->
+        <div class="activity-feed">
+            <h2 class="activity-feed__title">Recent Applications</h2>
+            {% if recent_apps %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Applicant</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in recent_apps %}
+                            <tr>
+                                <td>{{ app.pet.name }}</td>
+                                <td>{{ app.full_name }}</td>
+                                <td>
+                                    <span class="badge badge--{{ app.status }}">
+                                        {{ app.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'dashboard:application_review' app.pk %}" class="btn btn-sm btn-secondary">Review</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-2">
+                    <a href="{% url 'dashboard:applications_list' %}" class="btn btn-secondary btn-sm">View all applications</a>
+                </div>
+            {% else %}
+                <p class="text-muted">No applications yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Recent Surrenders -->
+        <div class="activity-feed">
+            <h2 class="activity-feed__title">Recent Surrender Requests</h2>
+            {% if recent_surrenders %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Submitter</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in recent_surrenders %}
+                            <tr>
+                                <td>{{ s.pet_name }}</td>
+                                <td>{{ s.submitter_name }}</td>
+                                <td>
+                                    <span class="badge badge--{{ s.status }}">
+                                        {{ s.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'dashboard:surrender_detail' s.pk %}" class="btn btn-sm btn-secondary">View</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-2">
+                    <a href="{% url 'dashboard:surrenders_list' %}" class="btn btn-secondary btn-sm">View all surrenders</a>
+                </div>
+            {% else %}
+                <p class="text-muted">No surrender requests yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

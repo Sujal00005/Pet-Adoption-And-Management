@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Adopter Accounts — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>Adopter Accounts</h1>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link active">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    {% if profiles %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Registered</th>
+                        <th>Applications</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profile in profiles %}
+                    <tr>
+                        <td>{{ profile.user.get_full_name|default:profile.user.username }}</td>
+                        <td>{{ profile.user.email }}</td>
+                        <td style="white-space:nowrap;">{{ profile.created_at|date:"d M Y" }}</td>
+                        <td>{{ profile.app_count }}</td>
+                        <td>
+                            {% if profile.user.is_active %}
+                                <span class="badge badge--available">Active</span>
+                            {% else %}
+                                <span class="badge badge--rejected">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:user_detail' profile.pk %}" class="btn btn-sm btn-secondary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <span class="empty-state__icon">👤</span>
+            <p class="empty-state__title">No adopters registered yet</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

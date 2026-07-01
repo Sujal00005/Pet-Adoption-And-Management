@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#e8f5ee"/>
+
+  <!-- Soft backdrop circle -->
+  <circle cx="200" cy="160" r="115" fill="#c8e8d4" opacity="0.5"/>
+
+  <!-- Body -->
+  <ellipse cx="200" cy="210" rx="62" ry="58" fill="#e8e0d8"/>
+
+  <!-- Head -->
+  <circle cx="200" cy="138" r="46" fill="#ede8e0"/>
+
+  <!-- Left ear (tall) -->
+  <ellipse cx="174" cy="82" rx="14" ry="42" fill="#ede8e0"/>
+  <ellipse cx="174" cy="82" rx="7" ry="34" fill="#f0b8c8"/>
+
+  <!-- Right ear (tall) -->
+  <ellipse cx="226" cy="82" rx="14" ry="42" fill="#ede8e0"/>
+  <ellipse cx="226" cy="82" rx="7" ry="34" fill="#f0b8c8"/>
+
+  <!-- Snout / cheeks -->
+  <ellipse cx="200" cy="150" rx="20" ry="14" fill="#f8f0ec"/>
+
+  <!-- Nose -->
+  <ellipse cx="200" cy="143" rx="5" ry="4" fill="#f0a0b0"/>
+
+  <!-- Left eye -->
+  <circle cx="184" cy="128" r="8" fill="#fff"/>
+  <circle cx="184" cy="128" r="5" fill="#8b4070"/>
+  <circle cx="186" cy="126" r="1.5" fill="#fff"/>
+
+  <!-- Right eye -->
+  <circle cx="216" cy="128" r="8" fill="#fff"/>
+  <circle cx="216" cy="128" r="5" fill="#8b4070"/>
+  <circle cx="218" cy="126" r="1.5" fill="#fff"/>
+
+  <!-- Mouth -->
+  <path d="M200 147 L196 153 M200 147 L204 153" stroke="#c88090" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Front left leg -->
+  <ellipse cx="168" cy="248" rx="16" ry="22" fill="#e8e0d8"/>
+  <!-- Front right leg -->
+  <ellipse cx="232" cy="248" rx="16" ry="22" fill="#e8e0d8"/>
+
+  <!-- Back feet (big bunny feet) -->
+  <ellipse cx="155" cy="262" rx="25" ry="12" fill="#ddd8d0"/>
+  <ellipse cx="245" cy="262" rx="25" ry="12" fill="#ddd8d0"/>
+
+  <!-- Cotton tail -->
+  <circle cx="260" cy="210" r="14" fill="#fff"/>
+  <circle cx="260" cy="210" r="10" fill="#f8f0ec"/>
+
+  <!-- Tummy -->
+  <ellipse cx="200" cy="218" rx="30" ry="26" fill="#f8f0ec" opacity="0.6"/>
+
+  <!-- Whiskers left -->
+  <line x1="162" y1="147" x2="188" y2="149" stroke="#c8b8b0" stroke-width="1" opacity="0.8"/>
+  <line x1="160" y1="152" x2="187" y2="152" stroke="#c8b8b0" stroke-width="1" opacity="0.8"/>
+
+  <!-- Whiskers right -->
+  <line x1="238" y1="147" x2="212" y2="149" stroke="#c8b8b0" stroke-width="1" opacity="0.8"/>
+  <line x1="240" y1="152" x2="213" y2="152" stroke="#c8b8b0" stroke-width="1" opacity="0.8"/>
+
+  <!-- Paw prints (decorative) -->
+  <circle cx="75" cy="268" r="6" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="95" cy="258" r="5" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="305" cy="268" r="6" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="325" cy="258" r="5" fill="#2c7a4b" opacity="0.2"/>
+
+  <!-- Label -->
+  <text x="200" y="292" text-anchor="middle" font-family="Nunito, sans-serif" font-size="13" font-weight="700" fill="#2c7a4b" opacity="0.7">No photo yet</text>
+</svg>

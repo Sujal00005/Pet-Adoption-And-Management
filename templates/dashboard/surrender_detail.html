@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Surrender Request — {{ surrender.pet_name }} — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>Surrender Request: {{ surrender.pet_name }}</h1>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="btn btn-secondary">← Back to Surrenders</a>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link active">Surrenders</a>
+    </nav>
+
+    <!-- Status banner -->
+    <p class="mb-3">
+        Status:
+        <span class="badge badge--{{ surrender.status }}" style="font-size:.9rem;">
+            {{ surrender.get_status_display }}
+        </span>
+        {% if surrender.reviewed_at %}
+            <span class="text-muted" style="font-size:.85rem; margin-left:.5rem;">
+                — reviewed on {{ surrender.reviewed_at|date:"d M Y" }}
+            </span>
+        {% endif %}
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+        <!-- Pet details -->
+        <div>
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Pet Information</h2>
+                <dl style="display:grid; grid-template-columns: 140px 1fr; gap:.4rem .75rem; font-size:.9rem;">
+                    <dt class="text-muted">Pet Name</dt>       <dd>{{ surrender.pet_name }}</dd>
+                    <dt class="text-muted">Species</dt>        <dd>{{ surrender.species|title }}</dd>
+                    <dt class="text-muted">Breed</dt>          <dd>{{ surrender.breed|default:"Not specified" }}</dd>
+                    <dt class="text-muted">Approx. Age</dt>    <dd>{{ surrender.approximate_age|default:"Not specified" }}</dd>
+                    <dt class="text-muted">Gender</dt>         <dd>{{ surrender.gender|title|default:"Not specified" }}</dd>
+                    <dt class="text-muted">Vaccinated</dt>
+                    <dd>
+                        {% if surrender.is_vaccinated %}
+                            <span class="text-success">Yes</span>
+                        {% else %}
+                            <span class="text-muted">No / Unknown</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+                {% if surrender.health_notes %}
+                <p class="text-muted mt-2" style="font-size:.8rem;">Health Notes:</p>
+                <p style="font-size:.9rem;">{{ surrender.health_notes }}</p>
+                {% endif %}
+            </div>
+
+            <div class="info-card">
+                <h2 style="font-size:1rem; margin-bottom:.75rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Reason for Surrender</h2>
+                <p style="font-size:.9rem;">{{ surrender.reason }}</p>
+            </div>
+        </div>
+
+        <!-- Submitter details + review action -->
+        <div>
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Submitter Contact</h2>
+                <dl style="display:grid; grid-template-columns: 110px 1fr; gap:.4rem .75rem; font-size:.9rem;">
+                    <dt class="text-muted">Name</dt>   <dd>{{ surrender.submitter_name }}</dd>
+                    <dt class="text-muted">Phone</dt>  <dd><a href="tel:{{ surrender.submitter_phone }}">{{ surrender.submitter_phone }}</a></dd>
+                    <dt class="text-muted">Email</dt>  <dd><a href="mailto:{{ surrender.submitter_email }}">{{ surrender.submitter_email }}</a></dd>
+                    <dt class="text-muted">Submitted</dt> <dd>{{ surrender.submitted_at|date:"d M Y, H:i" }}</dd>
+                </dl>
+            </div>
+
+            {% if surrender.admin_notes %}
+            <div class="info-card mb-3">
+                <h2 style="font-size:1rem; margin-bottom:.75rem;">Admin Notes</h2>
+                <p style="font-size:.9rem;">{{ surrender.admin_notes }}</p>
+            </div>
+            {% endif %}
+
+            {% if surrender.status == 'new' %}
+            <div class="info-card">
+                <h2 style="font-size:1rem; margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid var(--color-border);">Mark as Reviewed</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_admin_notes">Admin Notes (optional)</label>
+                        <textarea id="id_admin_notes" name="admin_notes" rows="4"
+                                  placeholder="Internal notes about this surrender request…"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">
+                        Mark as Reviewed
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Pet Adoption Portal{% endblock %}</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Skip to main content — helps keyboard and screen reader users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    {% include "navbar.html" %}
+
+    <!-- Flash messages (Django messages framework) -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert--{{ message.tags }}" role="alert">
+            {{ message }}
+            <button class="alert__close" onclick="this.parentElement.remove()" aria-label="Dismiss">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="main-content" id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Paws &amp; Hearts Shelter &mdash; Giving every pet a second chance.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/forms.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

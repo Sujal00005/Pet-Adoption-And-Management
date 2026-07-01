@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Create an Account — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="container">
+
+        <div class="form-card">
+            <div style="text-align:center; font-size:2.5rem; margin-bottom:0.5rem;">🏡</div>
+            <h1 class="form-card__title">Create an Account</h1>
+            <p class="form-card__subtitle">Join thousands of families who found their perfect companion.</p>
+
+            <!-- Non-field errors (e.g. password mismatch if not attached to a field) -->
+            {% if form.non_field_errors %}
+            <div class="alert alert--error" role="alert">
+                {% for error in form.non_field_errors %}
+                    <p style="margin: 0;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- First Name & Last Name — two-column grid -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 1rem;">
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        {% for error in form.first_name.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        {% for error in form.last_name.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                </div><!-- end two-column grid -->
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Phone (optional) -->
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">
+                        {{ form.phone.label }}
+                        <span class="text-muted" style="font-weight: 400;">(optional)</span>
+                    </label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        {% for error in form.phone.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                    {{ form.password1 }}
+                    <span class="help-text">{{ form.password1.help_text }}</span>
+                    {% if form.password1.errors %}
+                        {% for error in form.password1.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        {% for error in form.password2.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+
+            <!-- Link to login -->
+            <p class="text-center mt-3" style="font-size: 0.9rem;">
+                Already have an account?
+                <a href="{% url 'accounts:login' %}">Log in</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

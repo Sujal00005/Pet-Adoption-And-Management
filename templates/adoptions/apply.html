@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Apply to Adopt {{ pet.name }} — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container">
+        <h1>Adoption Application</h1>
+        <p class="text-muted">Applying to adopt <strong>{{ pet.name }}</strong> ({{ pet.get_species_display }})</p>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container" style="max-width: 720px;">
+
+        <p class="mb-3">
+            <a href="{% url 'pets:detail' pet.pk %}">&larr; Back to {{ pet.name }}'s Profile</a>
+        </p>
+
+        <div class="info-card mb-4">
+            <p class="mb-0">
+                Please complete all required fields. Your name and phone are pre-filled from your account
+                but you can update them if needed.
+            </p>
+        </div>
+
+        <form method="post" novalidate id="adoption-application-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert--error" role="alert">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <fieldset>
+                <legend class="pet-info__section-title">Your Contact Information</legend>
+
+                <div class="form-group">
+                    <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                    {{ form.full_name }}
+                    {% for error in form.full_name.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Phone Number</label>
+                    {{ form.phone }}
+                    {% for error in form.phone.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">Home Address</label>
+                    {{ form.address }}
+                    {% for error in form.address.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <fieldset class="mt-3">
+                <legend class="pet-info__section-title">Housing</legend>
+
+                <div class="form-group">
+                    <label for="{{ form.housing_type.id_for_label }}">Housing Type</label>
+                    {{ form.housing_type }}
+                    {% for error in form.housing_type.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.owns_or_rents.id_for_label }}">Do you own or rent?</label>
+                    {{ form.owns_or_rents }}
+                    {% for error in form.owns_or_rents.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group" id="landlord-contact-group">
+                    <label for="{{ form.landlord_contact.id_for_label }}">Landlord Contact</label>
+                    {{ form.landlord_contact }}
+                    <span class="help-text">Required if you rent your home.</span>
+                    {% for error in form.landlord_contact.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <fieldset class="mt-3">
+                <legend class="pet-info__section-title">Household</legend>
+
+                <div class="form-group">
+                    <label for="{{ form.household_members.id_for_label }}">Number of Household Members</label>
+                    {{ form.household_members }}
+                    {% for error in form.household_members.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-check">
+                    {{ form.has_other_pets }}
+                    <label for="{{ form.has_other_pets.id_for_label }}">I have other pets at home</label>
+                </div>
+                {% for error in form.has_other_pets.errors %}
+                    <span class="error-msg">{{ error }}</span>
+                {% endfor %}
+
+                <div class="form-group mt-2">
+                    <label for="{{ form.other_pets_desc.id_for_label }}">Describe Other Pets (if any)</label>
+                    {{ form.other_pets_desc }}
+                    {% for error in form.other_pets_desc.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.prev_pet_experience.id_for_label }}">Previous Pet Ownership Experience</label>
+                    {{ form.prev_pet_experience }}
+                    {% for error in form.prev_pet_experience.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </fieldset>
+
+            <fieldset class="mt-3">
+                <legend class="pet-info__section-title">Adoption Intent</legend>
+
+                <div class="form-group">
+                    <label for="{{ form.reason_for_adoption.id_for_label }}">Why do you want to adopt {{ pet.name }}?</label>
+                    {{ form.reason_for_adoption }}
+                    {% for error in form.reason_for_adoption.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-check">
+                    {{ form.agrees_to_home_visit }}
+                    <label for="{{ form.agrees_to_home_visit.id_for_label }}">
+                        I agree to a home visit as part of the adoption process
+                    </label>
+                </div>
+                {% for error in form.agrees_to_home_visit.errors %}
+                    <span class="error-msg">{{ error }}</span>
+                {% endfor %}
+            </fieldset>
+
+            <div class="form-actions mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Submit Application</button>
+                <a href="{% url 'pets:detail' pet.pk %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/forms.js' %}"></script>
+{% endblock %}

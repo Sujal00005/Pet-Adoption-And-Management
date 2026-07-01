@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Surrender a Pet — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div class="container">
+        <h1>Surrender a Pet</h1>
+        <p class="text-muted">We're here to help find the best path forward for you and your pet.</p>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <div class="form-card" style="max-width: 640px;">
+
+            <div class="info-card mb-4">
+                <p class="mb-0">
+                    Can't keep your pet? We're here to help. Fill out this form and our team will
+                    reach out within 2&ndash;3 business days.
+                </p>
+            </div>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert--error" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- ── Your Contact Details ── -->
+                <fieldset>
+                    <legend class="pet-info__section-title">Your Contact Details</legend>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem;">
+                        <div class="form-group">
+                            <label for="{{ form.submitter_name.id_for_label }}">
+                                {{ form.submitter_name.label }}
+                            </label>
+                            {{ form.submitter_name }}
+                            {% for error in form.submitter_name.errors %}
+                                <span class="error-msg">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.submitter_phone.id_for_label }}">
+                                {{ form.submitter_phone.label }}
+                            </label>
+                            {{ form.submitter_phone }}
+                            {% for error in form.submitter_phone.errors %}
+                                <span class="error-msg">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.submitter_email.id_for_label }}">
+                            {{ form.submitter_email.label }}
+                        </label>
+                        {{ form.submitter_email }}
+                        {% for error in form.submitter_email.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                <!-- ── Pet Information ── -->
+                <fieldset class="mt-3">
+                    <legend class="pet-info__section-title">Pet Information</legend>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem;">
+                        <div class="form-group">
+                            <label for="{{ form.pet_name.id_for_label }}">
+                                {{ form.pet_name.label }}
+                            </label>
+                            {{ form.pet_name }}
+                            {% for error in form.pet_name.errors %}
+                                <span class="error-msg">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.species.id_for_label }}">
+                                {{ form.species.label }}
+                            </label>
+                            {{ form.species }}
+                            {% for error in form.species.errors %}
+                                <span class="error-msg">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.breed.id_for_label }}">
+                                {{ form.breed.label }}
+                            </label>
+                            {{ form.breed }}
+                            {% for error in form.breed.errors %}
+                                <span class="error-msg">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.approximate_age.id_for_label }}">
+                                {{ form.approximate_age.label }}
+                            </label>
+                            {{ form.approximate_age }}
+                            {% for error in form.approximate_age.errors %}
+                                <span class="error-msg">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.gender.id_for_label }}">
+                            {{ form.gender.label }}
+                        </label>
+                        {{ form.gender }}
+                        {% for error in form.gender.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                <!-- ── Health ── -->
+                <fieldset class="mt-3">
+                    <legend class="pet-info__section-title">Health</legend>
+
+                    <div class="form-check mb-2">
+                        {{ form.is_vaccinated }}
+                        <label for="{{ form.is_vaccinated.id_for_label }}">
+                            {{ form.is_vaccinated.label }}
+                        </label>
+                    </div>
+                    {% for error in form.is_vaccinated.errors %}
+                        <span class="error-msg">{{ error }}</span>
+                    {% endfor %}
+
+                    <div class="form-group mt-2">
+                        <label for="{{ form.health_notes.id_for_label }}">
+                            {{ form.health_notes.label }}
+                        </label>
+                        {{ form.health_notes }}
+                        {% for error in form.health_notes.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                <!-- ── Reason ── -->
+                <fieldset class="mt-3">
+                    <legend class="pet-info__section-title">Reason for Surrender</legend>
+
+                    <div class="form-group">
+                        <label for="{{ form.reason.id_for_label }}">
+                            {{ form.reason.label }}
+                        </label>
+                        {{ form.reason }}
+                        {% for error in form.reason.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                <div class="form-actions mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        Submit Surrender Request
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

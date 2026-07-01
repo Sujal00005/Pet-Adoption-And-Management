@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Registration — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+
+        <div class="form-card">
+            <h1 class="form-card__title">Admin Registration</h1>
+            <p class="form-card__subtitle">Create an administrator account</p>
+
+            <!-- Warning banner — restricted page -->
+            <div class="alert alert--warning" role="alert" style="margin-bottom: 1.5rem;">
+                ⚠️ This page is for shelter administrators only. You will need the admin
+                secret key to create an account here.
+            </div>
+
+            <!-- Non-field errors -->
+            {% if form.non_field_errors %}
+            <div class="alert alert--error" role="alert">
+                {% for error in form.non_field_errors %}
+                    <p style="margin: 0;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        {% for error in form.first_name.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        {% for error in form.last_name.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Phone (optional) -->
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">
+                        {{ form.phone.label }}
+                        <span class="text-muted" style="font-weight: 400;">(optional)</span>
+                    </label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        {% for error in form.phone.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        {% for error in form.password1.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        {% for error in form.password2.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Admin Secret Key -->
+                <div class="form-group">
+                    <label for="{{ form.secret_key.id_for_label }}">{{ form.secret_key.label }}</label>
+                    {{ form.secret_key }}
+                    <span class="help-text">{{ form.secret_key.help_text }}</span>
+                    {% if form.secret_key.errors %}
+                        {% for error in form.secret_key.errors %}
+                            <span class="error-msg">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Create Admin Account
+                    </button>
+                </div>
+            </form>
+
+            <!-- Back to login -->
+            <p class="text-center mt-3" style="font-size: 0.9rem;">
+                Already have an account?
+                <a href="{% url 'accounts:login' %}">Log in</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

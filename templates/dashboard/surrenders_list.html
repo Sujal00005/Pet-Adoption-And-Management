@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Surrender Requests — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>Surrender Requests</h1>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link active">Surrenders</a>
+    </nav>
+
+    {% if surrenders %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pet Name</th>
+                        <th>Submitter</th>
+                        <th>Species</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in surrenders %}
+                    <tr>
+                        <td>{{ s.pet_name }}</td>
+                        <td>
+                            {{ s.submitter_name }}<br>
+                            <span class="text-muted" style="font-size:.82rem;">{{ s.submitter_email }}</span>
+                        </td>
+                        <td>{{ s.species|title }}</td>
+                        <td style="white-space:nowrap;">{{ s.submitted_at|date:"d M Y" }}</td>
+                        <td>
+                            <span class="badge badge--{{ s.status }}">
+                                {{ s.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:surrender_detail' s.pk %}" class="btn btn-sm btn-secondary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <span class="empty-state__icon">🐾</span>
+            <p class="empty-state__title">No surrender requests yet</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

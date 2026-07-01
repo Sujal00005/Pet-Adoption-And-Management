@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Pet Management — Dashboard{% endblock %}
+
+{% block content %}
+<div class="container section">
+
+    <div class="flex-between mb-3">
+        <h1>Pet Management</h1>
+        <a href="{% url 'dashboard:pet_add' %}" class="btn btn-primary">+ Add Pet</a>
+    </div>
+
+    <!-- Dashboard sub-nav -->
+    <nav class="dash-nav" aria-label="Dashboard navigation">
+        <a href="{% url 'dashboard:home' %}" class="dash-nav__link">Overview</a>
+        <a href="{% url 'dashboard:pets_list' %}" class="dash-nav__link active">Pets</a>
+        <a href="{% url 'dashboard:applications_list' %}" class="dash-nav__link">
+            Applications
+            {% if pending_count %}
+                <span class="badge badge--pending">{{ pending_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard:users_list' %}" class="dash-nav__link">Users</a>
+        <a href="{% url 'dashboard:surrenders_list' %}" class="dash-nav__link">Surrenders</a>
+    </nav>
+
+    {% if pets %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Species</th>
+                        <th>Age</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pet in pets %}
+                    <tr>
+                        <td>
+                            {% with photo=pet.primary_photo %}
+                                {% if photo %}
+                                    <img src="{{ photo.image.url }}"
+                                         alt="{{ pet.name }}"
+                                         style="width:56px; height:42px; object-fit:cover; border-radius:4px;">
+                                {% else %}
+                                    <span style="font-size:1.5rem;">🐾</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            <a href="{% url 'pets:detail' pet.pk %}">{{ pet.name }}</a>
+                        </td>
+                        <td>{{ pet.get_species_display }}</td>
+                        <td>{{ pet.age_display }}</td>
+                        <td>{{ pet.location }}</td>
+                        <td>
+                            <span class="badge badge--{{ pet.status }}">
+                                {{ pet.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex gap-1">
+                                <a href="{% url 'dashboard:pet_edit' pet.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                                <a href="{% url 'dashboard:pet_delete' pet.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <span class="empty-state__icon">🐾</span>
+            <p class="empty-state__title">No pets listed yet</p>
+            <p class="empty-state__text">Add the first pet to get started.</p>
+            <a href="{% url 'dashboard:pet_add' %}" class="btn btn-primary">Add Pet</a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

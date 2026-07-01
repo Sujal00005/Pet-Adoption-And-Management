@@ -1,0 +1,119 @@
+<nav class="navbar" aria-label="Main navigation">
+    <div class="navbar__inner">
+
+        <!-- Logo / Portal name -->
+        <a href="/" class="navbar__logo" aria-label="Paws and Hearts home">
+            🐾 Paws &amp; Hearts
+        </a>
+
+        <!-- Hamburger button — visible on mobile only -->
+        <button
+            class="navbar__hamburger"
+            id="navbar-toggle"
+            aria-controls="navbar-menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation menu"
+            onclick="
+                var menu = document.getElementById('navbar-menu');
+                var isOpen = menu.classList.toggle('navbar__menu--open');
+                this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            "
+        >
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+
+        <!-- Navigation links -->
+        <ul class="navbar__menu" id="navbar-menu" role="list">
+
+            {% if user.is_authenticated %}
+
+                {% if user.profile.role == 'admin' %}
+                    <!-- Admin navigation -->
+                    <li>
+                        <a href="/dashboard/"
+                           class="navbar__link {% if request.path == '/dashboard/' %}active{% endif %}">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="navbar__divider" aria-hidden="true"></li>
+                    <li>
+                        <span class="navbar__user">{{ user.get_full_name|default:user.username }}</span>
+                    </li>
+                    <li>
+                        <form method="post" action="/accounts/logout/" class="navbar__logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="navbar__link navbar__link--btn">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+
+                {% else %}
+                    <!-- Adopter navigation -->
+                    <li>
+                        <a href="/pets/"
+                           class="navbar__link {% if request.path == '/pets/' %}active{% endif %}">
+                            Browse Pets
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/adoptions/my-applications/"
+                           class="navbar__link {% if '/my-applications' in request.path %}active{% endif %}">
+                            My Applications
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/surrender/"
+                           class="navbar__link {% if request.path == '/surrender/' %}active{% endif %}">
+                            Surrender a Pet
+                        </a>
+                    </li>
+                    <li class="navbar__divider" aria-hidden="true"></li>
+                    <li>
+                        <span class="navbar__user">{{ user.first_name|default:user.username }}</span>
+                    </li>
+                    <li>
+                        <form method="post" action="/accounts/logout/" class="navbar__logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="navbar__link navbar__link--btn">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+
+                {% endif %}
+
+            {% else %}
+                <!-- Unauthenticated visitor navigation -->
+                <li>
+                    <a href="/pets/"
+                       class="navbar__link {% if request.path == '/pets/' %}active{% endif %}">
+                        Browse Pets
+                    </a>
+                </li>
+                <li>
+                    <a href="/surrender/"
+                       class="navbar__link {% if request.path == '/surrender/' %}active{% endif %}">
+                        Surrender a Pet
+                    </a>
+                </li>
+                <li>
+                    <a href="/accounts/login/"
+                       class="navbar__link {% if request.path == '/accounts/login/' %}active{% endif %}">
+                        Login
+                    </a>
+                </li>
+                <li>
+                    <a href="/accounts/register/"
+                       class="navbar__link navbar__link--cta {% if request.path == '/accounts/register/' %}active{% endif %}">
+                        Register
+                    </a>
+                </li>
+
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>

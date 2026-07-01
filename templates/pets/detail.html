@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ pet.name }} — Paws &amp; Hearts{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+
+        <p class="mb-2">
+            <a href="{% url 'pets:browse' %}">&larr; Back to Browse Pets</a>
+        </p>
+
+        <article class="pet-detail">
+
+            <!-- Photo gallery -->
+            <div class="pet-gallery">
+                <div class="pet-gallery__main" id="gallery-main">
+                    {% if photos %}
+                        <img
+                            id="gallery-current"
+                            src="{{ photos.0.image.url }}"
+                            alt="Photo of {{ pet.name }}{% if photos.0.caption %}: {{ photos.0.caption }}{% endif %}"
+                            data-gallery
+                            data-index="0"
+                        >
+                    {% else %}
+                        {% load static %}
+                        {% if pet.species == 'dog' %}
+                            <img src="{% static 'images/placeholder-dog.svg' %}" alt="Dog illustration — no photo uploaded yet" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+                        {% elif pet.species == 'cat' %}
+                            <img src="{% static 'images/placeholder-cat.svg' %}" alt="Cat illustration — no photo uploaded yet" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+                        {% elif pet.species == 'rabbit' %}
+                            <img src="{% static 'images/placeholder-rabbit.svg' %}" alt="Rabbit illustration — no photo uploaded yet" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+                        {% elif pet.species == 'bird' %}
+                            <img src="{% static 'images/placeholder-bird.svg' %}" alt="Bird illustration — no photo uploaded yet" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+                        {% else %}
+                            <img src="{% static 'images/placeholder-other.svg' %}" alt="Pet illustration — no photo uploaded yet" style="width:100%; aspect-ratio:4/3; object-fit:cover;">
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% if show_gallery_controls %}
+                    <div class="flex gap-1 mb-2">
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm"
+                            id="gallery-prev"
+                            aria-label="Previous photo"
+                        >
+                            &larr; Previous
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm"
+                            id="gallery-next"
+                            aria-label="Next photo"
+                        >
+                            Next &rarr;
+                        </button>
+                    </div>
+
+                    <div class="pet-gallery__thumbnails" role="list" aria-label="Photo thumbnails">
+                        {% for photo in photos %}
+                            <button
+                                type="button"
+                                class="pet-gallery__thumb{% if forloop.first %} active{% endif %}"
+                                role="listitem"
+                                data-gallery-index="{{ forloop.counter0 }}"
+                                data-gallery-src="{{ photo.image.url }}"
+                                data-gallery-alt="Photo of {{ pet.name }}{% if photo.caption %}: {{ photo.caption }}{% endif %}"
+                                aria-label="Show photo {{ forloop.counter }} of {{ photos|length }}"
+                            >
+                                <img
+                                    src="{{ photo.image.url }}"
+                                    alt=""
+                                    width="72"
+                                    height="72"
+                                >
+                            </button>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Hidden images for gallery cycling -->
+                    <div class="hidden" aria-hidden="true">
+                        {% for photo in photos %}
+                            <img
+                                data-gallery
+                                data-index="{{ forloop.counter0 }}"
+                                src="{{ photo.image.url }}"
+                                alt="Photo of {{ pet.name }}{% if photo.caption %}: {{ photo.caption }}{% endif %}"
+                            >
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Pet information -->
+            <div class="pet-info">
+                <h1 class="pet-info__name">{{ pet.name }}</h1>
+
+                <div class="pet-info__badges">
+                    <span class="badge badge--{{ pet.status }}">{{ pet.get_status_display }}</span>
+                    <span class="badge">{{ pet.get_species_display }}</span>
+                    <span class="badge">{{ pet.get_size_display }}</span>
+                </div>
+
+                <!-- Adoption action -->
+                {% if pet.status == 'available' %}
+                    {% if is_adopter %}
+                        {% if existing_application %}
+                            <div class="info-card mb-3">
+                                <p class="mb-1"><strong>Your Application Status</strong></p>
+                                <span class="badge badge--{{ existing_application.status }}">
+                                    {{ existing_application.get_status_display }}
+                                </span>
+                                <p class="text-muted mt-2 mb-0" style="font-size: 0.9rem;">
+                                    Submitted {{ existing_application.submitted_at|date:"F j, Y" }}.
+                                    <a href="{% url 'adoptions:detail' existing_application.pk %}">View application</a>
+                                </p>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'adoptions:apply' pet.pk %}" class="btn btn-primary btn-lg mb-3">
+                                Apply to Adopt
+                            </a>
+                        {% endif %}
+                    {% elif not user.is_authenticated %}
+                        <div class="info-card mb-3">
+                            <p class="mb-2">Interested in adopting {{ pet.name }}?</p>
+                            <p class="mb-0">
+                                <a href="{% url 'accounts:login' %}?next={% url 'pets:detail' pet.pk %}">Log in</a>
+                                or
+                                <a href="{% url 'accounts:register' %}">register</a>
+                                to submit an adoption application.
+                            </p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <section class="pet-info__section">
+                    <h2 class="pet-info__section-title">About {{ pet.name }}</h2>
+                    <p>{{ pet.description }}</p>
+                </section>
+
+                <section class="pet-info__section">
+                    <h2 class="pet-info__section-title">Details</h2>
+                    <dl class="pet-attrs">
+                        <div>
+                            <dt class="pet-attr__label">Species</dt>
+                            <dd class="pet-attr__value">{{ pet.get_species_display }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Breed</dt>
+                            <dd class="pet-attr__value">{{ pet.breed|default:"Mixed / Unknown" }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Age</dt>
+                            <dd class="pet-attr__value">{{ pet.age_display }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Gender</dt>
+                            <dd class="pet-attr__value">{{ pet.get_gender_display }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Size</dt>
+                            <dd class="pet-attr__value">{{ pet.get_size_display }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Color / Markings</dt>
+                            <dd class="pet-attr__value">{{ pet.color_markings|default:"Not specified" }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Location</dt>
+                            <dd class="pet-attr__value">{{ pet.location }}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Listed</dt>
+                            <dd class="pet-attr__value">{{ pet.listed_at|date:"F j, Y" }}</dd>
+                        </div>
+                    </dl>
+                </section>
+
+                {% if pet.temperament %}
+                    <section class="pet-info__section">
+                        <h2 class="pet-info__section-title">Temperament</h2>
+                        <p>{{ pet.temperament }}</p>
+                    </section>
+                {% endif %}
+
+                <section class="pet-info__section">
+                    <h2 class="pet-info__section-title">Health Status</h2>
+                    <dl class="pet-attrs">
+                        <div>
+                            <dt class="pet-attr__label">Vaccinated</dt>
+                            <dd class="pet-attr__value">{% if pet.is_vaccinated %}Yes{% else %}No{% endif %}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Spayed / Neutered</dt>
+                            <dd class="pet-attr__value">{% if pet.is_neutered %}Yes{% else %}No{% endif %}</dd>
+                        </div>
+                    </dl>
+                    {% if pet.medical_notes %}
+                        <p class="mt-2">{{ pet.medical_notes }}</p>
+                    {% endif %}
+                </section>
+
+                <section class="pet-info__section">
+                    <h2 class="pet-info__section-title">Compatibility</h2>
+                    <dl class="pet-attrs">
+                        <div>
+                            <dt class="pet-attr__label">Good with Kids</dt>
+                            <dd class="pet-attr__value">{% if pet.good_with_kids %}Yes{% else %}No{% endif %}</dd>
+                        </div>
+                        <div>
+                            <dt class="pet-attr__label">Good with Other Pets</dt>
+                            <dd class="pet-attr__value">{% if pet.good_with_pets %}Yes{% else %}No{% endif %}</dd>
+                        </div>
+                    </dl>
+                </section>
+            </div>
+
+        </article>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/pets.js' %}"></script>
+{% endblock %}

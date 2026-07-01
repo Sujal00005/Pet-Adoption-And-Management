@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#e8f5ee"/>
+
+  <!-- Soft backdrop circle -->
+  <circle cx="200" cy="160" r="120" fill="#c8e8d4" opacity="0.5"/>
+
+  <!-- Body -->
+  <ellipse cx="200" cy="210" rx="65" ry="58" fill="#9b8ea0"/>
+
+  <!-- Head -->
+  <circle cx="200" cy="128" r="52" fill="#b0a0b8"/>
+
+  <!-- Left ear (pointy) -->
+  <polygon points="158,100 148,60 185,90" fill="#9b8ea0"/>
+  <polygon points="162,97 156,72 181,90" fill="#e8b0c0"/>
+
+  <!-- Right ear (pointy) -->
+  <polygon points="242,100 252,60 215,90" fill="#9b8ea0"/>
+  <polygon points="238,97 244,72 219,90" fill="#e8b0c0"/>
+
+  <!-- Face markings -->
+  <ellipse cx="200" cy="140" rx="28" ry="20" fill="#d0c0d8"/>
+
+  <!-- Nose -->
+  <polygon points="200,135 195,142 205,142" fill="#e8a0b0"/>
+
+  <!-- Left eye -->
+  <ellipse cx="182" cy="118" rx="10" ry="9" fill="#fff"/>
+  <ellipse cx="182" cy="118" rx="5" ry="7" fill="#3d6b2a"/>
+  <ellipse cx="182" cy="118" rx="2" ry="5" fill="#1a1a1a"/>
+  <circle cx="184" cy="115" r="1.5" fill="#fff"/>
+
+  <!-- Right eye -->
+  <ellipse cx="218" cy="118" rx="10" ry="9" fill="#fff"/>
+  <ellipse cx="218" cy="118" rx="5" ry="7" fill="#3d6b2a"/>
+  <ellipse cx="218" cy="118" rx="2" ry="5" fill="#1a1a1a"/>
+  <circle cx="220" cy="115" r="1.5" fill="#fff"/>
+
+  <!-- Mouth -->
+  <path d="M200 142 L196 147 M200 142 L204 147" stroke="#8a6070" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Whiskers left -->
+  <line x1="158" y1="138" x2="188" y2="140" stroke="#8a8090" stroke-width="1.2" opacity="0.7"/>
+  <line x1="155" y1="143" x2="187" y2="143" stroke="#8a8090" stroke-width="1.2" opacity="0.7"/>
+  <line x1="158" y1="148" x2="188" y2="145" stroke="#8a8090" stroke-width="1.2" opacity="0.7"/>
+
+  <!-- Whiskers right -->
+  <line x1="242" y1="138" x2="212" y2="140" stroke="#8a8090" stroke-width="1.2" opacity="0.7"/>
+  <line x1="245" y1="143" x2="213" y2="143" stroke="#8a8090" stroke-width="1.2" opacity="0.7"/>
+  <line x1="242" y1="148" x2="212" y2="145" stroke="#8a8090" stroke-width="1.2" opacity="0.7"/>
+
+  <!-- Front paws -->
+  <ellipse cx="170" cy="253" rx="18" ry="14" fill="#9b8ea0"/>
+  <ellipse cx="230" cy="253" rx="18" ry="14" fill="#9b8ea0"/>
+
+  <!-- Tail (long curled) -->
+  <path d="M262 225 Q310 200 305 155 Q300 120 280 140" stroke="#9b8ea0" stroke-width="13" fill="none" stroke-linecap="round"/>
+
+  <!-- Belly -->
+  <ellipse cx="200" cy="220" rx="32" ry="25" fill="#d0c0d8" opacity="0.5"/>
+
+  <!-- Paw prints (decorative) -->
+  <circle cx="75" cy="268" r="6" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="95" cy="258" r="5" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="305" cy="268" r="6" fill="#2c7a4b" opacity="0.2"/>
+  <circle cx="325" cy="258" r="5" fill="#2c7a4b" opacity="0.2"/>
+
+  <!-- Label -->
+  <text x="200" y="292" text-anchor="middle" font-family="Nunito, sans-serif" font-size="13" font-weight="700" fill="#2c7a4b" opacity="0.7">No photo yet</text>
+</svg>
