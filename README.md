@@ -42,7 +42,7 @@ A modern full-stack Pet Adoption and Management web application built with <stro
 ## 🏠 Home Page
 
 <p align="center">
-  <img src="assets/Home.png" width="90%">
+  <img src="assets/home.png" width="90%">
 </p>
 
 ---
