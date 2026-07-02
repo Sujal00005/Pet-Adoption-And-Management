@@ -1,7 +1,7 @@
 # 🐾 Pet Adoption and Management System
 
 <p align="center">
-  <img src="assets/home.png" alt="Pet Adoption Home Page" width="100%">
+  <img src="assets/Home.png" alt="Pet Adoption Home Page" width="100%">
 </p>
 
 <p align="center">
@@ -42,7 +42,7 @@ A modern full-stack Pet Adoption and Management web application built with <stro
 ## 🏠 Home Page
 
 <p align="center">
-  <img src="assets/home.png" width="90%">
+  <img src="assets/Home.png" width="90%">
 </p>
 
 ---
@@ -50,7 +50,7 @@ A modern full-stack Pet Adoption and Management web application built with <stro
 ## 🔐 Login Page
 
 <p align="center">
-  <img src="assets/login.png" width="90%">
+  <img src="assets/Login.png" width="90%">
 </p>
 
 ---
@@ -58,7 +58,7 @@ A modern full-stack Pet Adoption and Management web application built with <stro
 ## 🐶 Pet Listing
 
 <p align="center">
-  <img src="assets/pet-list.png" width="90%">
+  <img src="assets/Pet-List.png" width="90%">
 </p>
 
 ---
@@ -66,7 +66,7 @@ A modern full-stack Pet Adoption and Management web application built with <stro
 ## 📊 Admin Dashboard
 
 <p align="center">
-  <img src="assets/dashboard.png" width="90%">
+  <img src="assets/Dashboard.png" width="90%">
 </p>
 
 ---
