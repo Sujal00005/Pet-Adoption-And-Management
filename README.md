@@ -211,7 +211,7 @@ If you'd like to improve this project:
 ### **Sujal Yadav**
 
 - GitHub: https://github.com/Sujal00005
-- LinkedIn: <YOUR_LINKEDIN_URL>
+- LinkedIn: https://www.linkedin.com/in/sujal-yadav-sy00005
 
 ---
 
