@@ -50,7 +50,7 @@ A modern full-stack Pet Adoption and Management web application built with <stro
 ## 🔐 Login Page
 
 <p align="center">
-  <img src="assets/Login.png" width="90%">
+  <img src="assets/login.png" width="90%">
 </p>
 
 ---
