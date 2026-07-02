@@ -24,32 +24,40 @@ handler404 = handler_404
 handler500 = handler_500
 
 
-def root_redirect(request):
+def home_view(request):
     """
-    Redirect visitors to the appropriate home page.
-
-    - Authenticated admin  → Admin dashboard
-    - Authenticated adopter → Pet browsing page
-    - Anonymous visitor    → Pet browsing page (no account needed to browse)
+    Landing page with hero section and featured pets.
     """
-    if request.user.is_authenticated:
-        # Check the user's role stored in their profile
-        try:
-            if request.user.profile.role == 'admin':
-                return redirect('/dashboard/')
-        except AttributeError:
-            # Profile doesn't exist yet — treat as adopter
-            pass
-    # Adopters and anonymous visitors both land on the pet browsing page
-    return redirect('/pets/')
+    from django.shortcuts import render
+    from pets.models import Pet
+    from accounts.models import UserProfile
+    
+    # Get featured pets (latest 6 available)
+    featured_pets = (
+        Pet.objects.filter(status='available')
+        .prefetch_related('photos')
+        .order_by('-listed_at')[:6]
+    )
+    
+    # Stats for hero section
+    stats = {
+        'total_pets': Pet.objects.filter(status='available').count(),
+        'total_adoptions': Pet.objects.filter(status='adopted').count(),
+        'total_adopters': UserProfile.objects.filter(role='adopter').count(),
+    }
+    
+    return render(request, 'home.html', {
+        'featured_pets': featured_pets,
+        'stats': stats,
+    })
 
 
 urlpatterns = [
     # Django's built-in admin site (useful for development; restrict in production)
     path('admin/', admin.site.urls),
 
-    # Portal root — smart redirect based on role
-    path('', root_redirect, name='root'),
+    # Portal root — home page
+    path('', home_view, name='home'),
 
     # App URL namespaces
     path('accounts/', include('accounts.urls', namespace='accounts')),

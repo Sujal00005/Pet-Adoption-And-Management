@@ -163,6 +163,9 @@ STATIC_URL = '/static/'
 # Tell Django where to look for extra static files (our hand-written CSS)
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# Where collectstatic will collect static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # ---------------------------------------------------------------------------
 # Media files — uploaded pet photos land here

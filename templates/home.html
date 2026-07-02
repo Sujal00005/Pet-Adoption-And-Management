@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Welcome — Paws & Hearts{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero__content">
+            <div class="hero__eyebrow">
+                <span>🏡</span> Trusted Pet Adoption Portal
+            </div>
+            <h1 class="hero__title">
+                Find Your <span>Perfect</span> Companion
+            </h1>
+            <p class="hero__subtitle">
+                Every pet deserves a loving home. Browse hundreds of adorable animals 
+                waiting to meet their forever family. Start your adoption journey today.
+            </p>
+            <div class="hero__actions">
+                <a href="{% url 'pets:browse' %}" class="btn btn-primary btn-xl btn-icon">
+                    🔍 Browse Pets
+                </a>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'accounts:register' %}" class="btn btn-outline btn-xl">
+                    Get Started
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="hero__stats">
+                <div>
+                    <div class="hero__stat-number">{{ stats.total_pets }}</div>
+                    <div class="hero__stat-label">Pets Available</div>
+                </div>
+                <div>
+                    <div class="hero__stat-number">{{ stats.total_adoptions }}+</div>
+                    <div class="hero__stat-label">Happy Adoptions</div>
+                </div>
+                <div>
+                    <div class="hero__stat-number">{{ stats.total_adopters }}+</div>
+                    <div class="hero__stat-label">Registered Families</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Pets Section -->
+{% if featured_pets %}
+<section class="section">
+    <div class="container">
+        <div style="text-align: center; max-width: 640px; margin: 0 auto 3rem;">
+            <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 0.75rem;">
+                Meet Our Available Pets
+            </h2>
+            <p style="color: var(--color-text-muted); font-size: 1.05rem;">
+                These wonderful animals are looking for their forever homes. 
+                Each one has a unique personality and story.
+            </p>
+        </div>
+
+        <div class="grid">
+            {% for pet in featured_pets %}
+            <article class="card">
+                <a href="{% url 'pets:detail' pet.pk %}">
+                    {% if pet.primary_photo %}
+                    <img src="{{ pet.primary_photo.image.url }}" 
+                         alt="Photo of {{ pet.name }}" 
+                         class="card__image" 
+                         loading="lazy">
+                    {% else %}
+                    <div class="card__image-placeholder">
+                        {% if pet.species == 'dog' %}
+                        <img src="{% static 'images/placeholder-dog.svg' %}" alt="Dog placeholder">
+                        {% elif pet.species == 'cat' %}
+                        <img src="{% static 'images/placeholder-cat.svg' %}" alt="Cat placeholder">
+                        {% elif pet.species == 'rabbit' %}
+                        <img src="{% static 'images/placeholder-rabbit.svg' %}" alt="Rabbit placeholder">
+                        {% elif pet.species == 'bird' %}
+                        <img src="{% static 'images/placeholder-bird.svg' %}" alt="Bird placeholder">
+                        {% else %}
+                        <img src="{% static 'images/placeholder-other.svg' %}" alt="Pet placeholder">
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </a>
+                <div class="card__body">
+                    <h3 class="card__title">
+                        <a href="{% url 'pets:detail' pet.pk %}">{{ pet.name }}</a>
+                    </h3>
+                    <div class="card__meta">
+                        <span>{{ pet.get_species_display }}</span>
+                        {% if pet.breed %}<span>{{ pet.breed }}</span>{% endif %}
+                        <span>{{ pet.age_display }}</span>
+                    </div>
+                </div>
+                <div class="card__footer">
+                    <span class="badge badge--available">✅ Available</span>
+                    <a href="{% url 'pets:detail' pet.pk %}" class="btn btn-sm btn-secondary">
+                        View Profile
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <a href="{% url 'pets:browse' %}" class="btn btn-primary btn-lg btn-icon">
+                View All Pets →
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

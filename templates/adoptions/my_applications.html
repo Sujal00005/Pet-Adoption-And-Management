@@ -26,7 +26,20 @@
                                     loading="lazy"
                                 >
                             {% else %}
-                                <div class="card__image-placeholder" aria-hidden="true">🐾</div>
+                                {% load static %}
+                                <div class="card__image-placeholder">
+                                    {% if application.pet.species == 'dog' %}
+                                    <img src="{% static 'images/placeholder-dog.svg' %}" alt="Dog placeholder">
+                                    {% elif application.pet.species == 'cat' %}
+                                    <img src="{% static 'images/placeholder-cat.svg' %}" alt="Cat placeholder">
+                                    {% elif application.pet.species == 'rabbit' %}
+                                    <img src="{% static 'images/placeholder-rabbit.svg' %}" alt="Rabbit placeholder">
+                                    {% elif application.pet.species == 'bird' %}
+                                    <img src="{% static 'images/placeholder-bird.svg' %}" alt="Bird placeholder">
+                                    {% else %}
+                                    <img src="{% static 'images/placeholder-other.svg' %}" alt="Pet placeholder">
+                                    {% endif %}
+                                </div>
                             {% endif %}
                         </a>
                         <div class="card__body">
