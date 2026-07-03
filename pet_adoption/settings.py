@@ -55,7 +55,10 @@ SECRET_KEY = 'django-dev-secret-key-change-me-before-production-xj7k2p9q#m!w@v'
 # Never run with DEBUG = True in production — it exposes stack traces.
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.environ.get(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1"
+).split(",")
 
 
 # ---------------------------------------------------------------------------
