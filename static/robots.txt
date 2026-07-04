@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /accounts/logout/
+
+Sitemap: https://pet-adoption-and-management-74e2.onrender.com/sitemap.xml

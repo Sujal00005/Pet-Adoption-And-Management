@@ -3,12 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- SEO Meta Tags -->
     <title>{% block title %}Pet Adoption Portal{% endblock %}</title>
+    <meta name="description" content="{% block description %}Find your perfect companion at Paws & Hearts. Browse adorable dogs, cats, rabbits, and birds waiting for their forever homes. Start your adoption journey today.{% endblock %}">
+    <meta name="keywords" content="pet adoption, adopt dog, adopt cat, animal rescue, pet shelter, adopt pets online">
+    <meta name="author" content="Paws & Hearts">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pet-adoption-and-management-74e2.onrender.com/">
+    <meta property="og:title" content="{% block og_title %}Paws & Hearts - Pet Adoption Portal{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Find your perfect companion. Browse adorable animals waiting for their forever homes.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/og-image.jpg' %}{% endblock %}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pet-adoption-and-management-74e2.onrender.com/">
+    <meta property="twitter:title" content="{% block twitter_title %}Paws & Hearts - Pet Adoption Portal{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Find your perfect companion at Paws & Hearts.{% endblock %}">
+    <meta property="twitter:image" content="{% static 'images/og-image.jpg' %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    
+    <!-- Fonts -->
     {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{% static 'css/style.css' %}" as="style">
+    
     {% block extra_head %}{% endblock %}
 </head>
 <body>
