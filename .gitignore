@@ -34,6 +34,9 @@ Thumbs.db
 # Local theory/notes — not for GitHub
 THEORY/
 
+# Kiro IDE internal files — not for GitHub
+.kiro/
+
 # Environment files
 .env
 .env.*
