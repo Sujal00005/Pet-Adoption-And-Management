@@ -31,6 +31,9 @@ env/
 # Windows
 Thumbs.db
 
+# Local theory/notes — not for GitHub
+THEORY/
+
 # Environment files
 .env
 .env.*
