@@ -24,7 +24,7 @@ A full-stack Pet Adoption and Management web application built with <strong>Djan
 - Receive email confirmation on submission and status updates
 
 ### For Admins
-- Register via secret key (`paws-and-hearts-admin-2025`)
+- Register via secret key (set in environment variable)
 - Dashboard with live stats: available pets, pending applications, new surrenders, total adopters
 - Full pet management — add, edit, delete, upload photos
 - Review adoption applications (pending → under review → approved / rejected)
