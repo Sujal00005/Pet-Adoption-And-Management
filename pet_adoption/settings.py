@@ -50,7 +50,7 @@ if _env_file.exists():
 # ---------------------------------------------------------------------------
 
 # TODO: Move to an environment variable before production deployment.
-SECRET_KEY = 'django-dev-secret-key-change-me-before-production-xj7k2p9q#m!w@v'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-dev-secret-key-change-me-before-production-xj7k2p9q#m!w@v')
 
 # Never run with DEBUG = True in production — it exposes stack traces.
 DEBUG = True
@@ -232,4 +232,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # TODO: Move to an environment variable before production deployment.
 # ---------------------------------------------------------------------------
 
-ADMIN_REGISTRATION_KEY = 'paws-and-hearts-admin-2025'
+ADMIN_REGISTRATION_KEY = os.environ.get('ADMIN_REGISTRATION_KEY', '')

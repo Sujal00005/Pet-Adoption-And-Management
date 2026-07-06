@@ -180,7 +180,7 @@ python manage.py migrate
 ### 6. Create an admin account
 
 **Option A — via the web UI:**
-Visit `http://127.0.0.1:8000/accounts/admin-register/` and use the secret key `paws-and-hearts-admin-2025`.
+Visit `http://127.0.0.1:8000/accounts/admin-register/` and enter the admin registration key (set via the `ADMIN_REGISTRATION_KEY` environment variable in your `.env` file).
 
 **Option B — via Django's built-in superuser:**
 ```bash
