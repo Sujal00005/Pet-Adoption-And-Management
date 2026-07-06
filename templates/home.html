@@ -10,41 +10,51 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <div class="hero__content">
-            <div class="hero__eyebrow">
-                <span>🏡</span> Trusted Pet Adoption Portal
-            </div>
-            <h1 class="hero__title">
-                Find Your <span>Perfect</span> Companion
-            </h1>
-            <p class="hero__subtitle">
-                Every pet deserves a loving home. Browse hundreds of adorable animals 
-                waiting to meet their forever family. Start your adoption journey today.
-            </p>
-            <div class="hero__actions">
-                <a href="{% url 'pets:browse' %}" class="btn btn-primary btn-xl btn-icon">
-                    🔍 Browse Pets
-                </a>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'accounts:register' %}" class="btn btn-outline btn-xl">
-                    Get Started
-                </a>
-                {% endif %}
+        <div class="hero__layout">
+            <!-- Left: Text content -->
+            <div class="hero__content">
+                <div class="hero__eyebrow">
+                    <span>🏡</span> Trusted Pet Adoption Portal
+                </div>
+                <h1 class="hero__title">
+                    Find Your <span>Perfect</span> Companion
+                </h1>
+                <p class="hero__subtitle">
+                    Every pet deserves a loving home. Browse hundreds of adorable animals 
+                    waiting to meet their forever family. Start your adoption journey today.
+                </p>
+                <div class="hero__actions">
+                    <a href="{% url 'pets:browse' %}" class="btn btn-primary btn-xl btn-icon">
+                        🔍 Browse Pets
+                    </a>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline btn-xl">
+                        Get Started
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="hero__stats">
+                    <div>
+                        <div class="hero__stat-number">{{ stats.total_pets }}</div>
+                        <div class="hero__stat-label">Pets Available</div>
+                    </div>
+                    <div>
+                        <div class="hero__stat-number">{{ stats.total_adoptions }}+</div>
+                        <div class="hero__stat-label">Happy Adoptions</div>
+                    </div>
+                    <div>
+                        <div class="hero__stat-number">{{ stats.total_adopters }}+</div>
+                        <div class="hero__stat-label">Registered Families</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="hero__stats">
-                <div>
-                    <div class="hero__stat-number">{{ stats.total_pets }}</div>
-                    <div class="hero__stat-label">Pets Available</div>
-                </div>
-                <div>
-                    <div class="hero__stat-number">{{ stats.total_adoptions }}+</div>
-                    <div class="hero__stat-label">Happy Adoptions</div>
-                </div>
-                <div>
-                    <div class="hero__stat-number">{{ stats.total_adopters }}+</div>
-                    <div class="hero__stat-label">Registered Families</div>
-                </div>
+            <!-- Right: Pet image -->
+            <div class="hero__image-wrap">
+                <img src="{% static 'images/Pet_Photo.png' %}"
+                     alt="A happy dog and cat together"
+                     class="hero__pet-image">
             </div>
         </div>
     </div>
